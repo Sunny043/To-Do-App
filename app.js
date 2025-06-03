@@ -7,7 +7,9 @@ app.use(express.static('public'));
 
 app.set('view engine', 'ejs');
 app.use(bodyParse.urlencoded({extended: true}));
-mongoose.connect('mongodb://localhost:27017/todolistDB');
+mongoose.connect('mongodb://localhost:27017/todolistDB')
+    .then(() => console.log("Connected to MongoDB successfully"))
+    .catch(err => console.error("Could not connect to MongoDB:", err));
 const trySchema = new mongoose.Schema({
     name: String,
 });
@@ -39,6 +41,7 @@ app.post('/delete', async function(req, res){
     const checked = req.body.checkbox1;
     try{
         await Item.findByIdAndDelete(checked);
+        console.log("Deleted item with ID:", checked);
         res.redirect('/');
     }catch(err){
         console.error("Error deleting item:", err); 
